@@ -59,20 +59,29 @@ System.out.println("No rooms available");
 System.out.println("How many days later should I search?"); int zzz = Integer.parseInt(scan.nextLine().trim()); if (zzz <= 0) { throw new IllegalArgumentException("Bad days"); }
 Calendar cal = Calendar.getInstance(); cal.setTime(in); cal.add(Calendar.DATE, zzz); Date tryIn = cal.getTime(); cal.setTime(out); cal.add(Calendar.DATE, zzz); Date tryOut = cal.getTime();
 Collection<IRoom> maybe = hotel.findRoom(tryIn, tryOut);
-if (!maybe.isEmpty()) { System.out.println("\nRecommended Rooms:"); System.out.println("Recommended Dates: " + fmt.format(tryIn) + " to " + fmt.format(tryOut)); for (IRoom r : maybe) { System.out.println(r); } }
+if (!maybe.isEmpty()) { System.out.println("\nRecommended Rooms:"); System.out.println("Recommended Dates: " + fmt.format(tryIn) + " to " + fmt.format(tryOut)); bookFromRooms(maybe, tryIn, tryOut); }
 else { System.out.println("No recommended rooms available"); }
 return;
 }
 
 System.out.println("\nAvailable Rooms:");
-for (IRoom r : open) { System.out.println(r); System.out.println("----------------"); }
+bookFromRooms(open, in, out);
+} catch (Exception ex) { System.out.println("Invalid reservation details"); }
+}
+
+private static void bookFromRooms(Collection<IRoom> rooms, Date in, Date out) {
+for (IRoom r : rooms) { System.out.println(r); System.out.println("----------------"); }
 System.out.println("Would you like to book a room? (y/n)"); String ans = scan.nextLine().trim();
 if (ans.equalsIgnoreCase("y")) {
 System.out.println("Enter your email:"); String mail = scan.nextLine().trim();
 System.out.println("Enter room number:"); String no = scan.nextLine().trim();
-IRoom r = hotel.getRoom(no); if (r == null) { System.out.println("Invalid room number"); return; }
-hotel.bookRoom(mail, r, in, out); System.out.println("Reservation successful");
+IRoom r = findRoomInCollection(rooms, no); if (r == null) { System.out.println("Invalid room number"); return; }
+Reservation made = hotel.bookRoom(mail, r, in, out); System.out.println("Reservation successful"); System.out.println(made);
 }
-} catch (Exception ex) { System.out.println("Invalid reservation details"); }
+}
+
+private static IRoom findRoomInCollection(Collection<IRoom> rooms, String no) {
+for (IRoom r : rooms) { if (r.getRoomNumber().equals(no)) { return r; } }
+return null;
 }
 }
