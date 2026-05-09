@@ -56,7 +56,8 @@ if (!out.after(in)) { System.out.println("Check-out date must be after check-in 
 Collection<IRoom> open = hotel.findRoom(in, out);
 if (open.isEmpty()) {
 System.out.println("No rooms available");
-Calendar cal = Calendar.getInstance(); cal.setTime(in); cal.add(Calendar.DATE, 7); Date tryIn = cal.getTime(); cal.setTime(out); cal.add(Calendar.DATE, 7); Date tryOut = cal.getTime();
+System.out.println("How many days later should I search?"); int zzz = Integer.parseInt(scan.nextLine().trim()); if (zzz <= 0) { throw new IllegalArgumentException("Bad days"); }
+Calendar cal = Calendar.getInstance(); cal.setTime(in); cal.add(Calendar.DATE, zzz); Date tryIn = cal.getTime(); cal.setTime(out); cal.add(Calendar.DATE, zzz); Date tryOut = cal.getTime();
 Collection<IRoom> maybe = hotel.findRoom(tryIn, tryOut);
 if (!maybe.isEmpty()) { System.out.println("\nRecommended Rooms:"); System.out.println("Recommended Dates: " + fmt.format(tryIn) + " to " + fmt.format(tryOut)); for (IRoom r : maybe) { System.out.println(r); } }
 else { System.out.println("No recommended rooms available"); }
